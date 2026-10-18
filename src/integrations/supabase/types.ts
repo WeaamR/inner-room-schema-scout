@@ -21,12 +21,15 @@ export type Database = {
           created_at: string
           decision_text: string | null
           dilemma_question_snapshot: string
+          dilemma_question_snapshot_ar: string
           id: string
           motivation_text: string | null
           potential_cost: string | null
           scenario_id: string
           scenario_premise_snapshot: string
+          scenario_premise_snapshot_ar: string
           scenario_title_snapshot: string
+          scenario_title_snapshot_ar: string
           status: string
           updated_at: string
           user_id: string
@@ -37,12 +40,15 @@ export type Database = {
           created_at?: string
           decision_text?: string | null
           dilemma_question_snapshot: string
+          dilemma_question_snapshot_ar: string
           id?: string
           motivation_text?: string | null
           potential_cost?: string | null
           scenario_id: string
           scenario_premise_snapshot: string
+          scenario_premise_snapshot_ar: string
           scenario_title_snapshot: string
+          scenario_title_snapshot_ar: string
           status?: string
           updated_at?: string
           user_id?: string
@@ -53,12 +59,15 @@ export type Database = {
           created_at?: string
           decision_text?: string | null
           dilemma_question_snapshot?: string
+          dilemma_question_snapshot_ar?: string
           id?: string
           motivation_text?: string | null
           potential_cost?: string | null
           scenario_id?: string
           scenario_premise_snapshot?: string
+          scenario_premise_snapshot_ar?: string
           scenario_title_snapshot?: string
+          scenario_title_snapshot_ar?: string
           status?: string
           updated_at?: string
           user_id?: string
@@ -147,37 +156,46 @@ export type Database = {
           category: string
           created_at: string
           dilemma_question: string
+          dilemma_question_ar: string
           id: string
           is_published: boolean
           premise: string
+          premise_ar: string
           slug: string
           sort_order: number
           tension_level: number
           title: string
+          title_ar: string
         }
         Insert: {
           category: string
           created_at?: string
           dilemma_question: string
+          dilemma_question_ar: string
           id?: string
           is_published?: boolean
           premise: string
+          premise_ar: string
           slug: string
           sort_order?: number
           tension_level?: number
           title: string
+          title_ar: string
         }
         Update: {
           category?: string
           created_at?: string
           dilemma_question?: string
+          dilemma_question_ar?: string
           id?: string
           is_published?: boolean
           premise?: string
+          premise_ar?: string
           slug?: string
           sort_order?: number
           tension_level?: number
           title?: string
+          title_ar?: string
         }
         Relationships: []
       }
