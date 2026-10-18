@@ -31,7 +31,7 @@ function translate(msg: string) {
 
 function AuthPage() {
   const { mode } = Route.useSearch();
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: "/auth" });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
