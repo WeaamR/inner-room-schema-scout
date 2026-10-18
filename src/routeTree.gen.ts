@@ -12,10 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedExploreRouteImport } from './routes/_authenticated/explore'
 import { Route as AuthenticatedRoomsRouteImport } from './routes/_authenticated/rooms'
 import { Route as AuthenticatedScenariosRouteImport } from './routes/_authenticated/scenarios'
 import { Route as AuthenticatedCharactersCharacterIdRouteImport } from './routes/_authenticated/characters.$characterId'
 import { Route as AuthenticatedCharactersNewRouteImport } from './routes/_authenticated/characters.new'
+import { Route as AuthenticatedExplorationsExplorationIdRouteImport } from './routes/_authenticated/explorations.$explorationId'
 import { Route as AuthenticatedProjectsProjectIdRouteImport } from './routes/_authenticated/projects.$projectId'
 import { Route as AuthenticatedCharactersCharacterIdEditRouteImport } from './routes/_authenticated/characters.$characterId_.edit'
 
@@ -32,6 +34,11 @@ const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedExploreRoute = AuthenticatedExploreRouteImport.update({
+  id: '/explore',
+  path: '/explore',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedRoomsRoute = AuthenticatedRoomsRouteImport.update({
   id: '/rooms',
@@ -55,6 +62,12 @@ const AuthenticatedCharactersNewRoute =
     path: '/characters/new',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedExplorationsExplorationIdRoute =
+  AuthenticatedExplorationsExplorationIdRouteImport.update({
+    id: '/explorations/$explorationId',
+    path: '/explorations/$explorationId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedProjectsProjectIdRoute =
   AuthenticatedProjectsProjectIdRouteImport.update({
     id: '/projects/$projectId',
@@ -71,20 +84,24 @@ const AuthenticatedCharactersCharacterIdEditRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/explore': typeof AuthenticatedExploreRoute
   '/rooms': typeof AuthenticatedRoomsRoute
   '/scenarios': typeof AuthenticatedScenariosRoute
   '/characters/$characterId': typeof AuthenticatedCharactersCharacterIdRoute
   '/characters/new': typeof AuthenticatedCharactersNewRoute
+  '/explorations/$explorationId': typeof AuthenticatedExplorationsExplorationIdRoute
   '/projects/$projectId': typeof AuthenticatedProjectsProjectIdRoute
   '/characters/$characterId/edit': typeof AuthenticatedCharactersCharacterIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/explore': typeof AuthenticatedExploreRoute
   '/rooms': typeof AuthenticatedRoomsRoute
   '/scenarios': typeof AuthenticatedScenariosRoute
   '/characters/$characterId': typeof AuthenticatedCharactersCharacterIdRoute
   '/characters/new': typeof AuthenticatedCharactersNewRoute
+  '/explorations/$explorationId': typeof AuthenticatedExplorationsExplorationIdRoute
   '/projects/$projectId': typeof AuthenticatedProjectsProjectIdRoute
   '/characters/$characterId/edit': typeof AuthenticatedCharactersCharacterIdEditRoute
 }
@@ -93,10 +110,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/explore': typeof AuthenticatedExploreRoute
   '/_authenticated/rooms': typeof AuthenticatedRoomsRoute
   '/_authenticated/scenarios': typeof AuthenticatedScenariosRoute
   '/_authenticated/characters/$characterId': typeof AuthenticatedCharactersCharacterIdRoute
   '/_authenticated/characters/new': typeof AuthenticatedCharactersNewRoute
+  '/_authenticated/explorations/$explorationId': typeof AuthenticatedExplorationsExplorationIdRoute
   '/_authenticated/projects/$projectId': typeof AuthenticatedProjectsProjectIdRoute
   '/_authenticated/characters/$characterId_/edit': typeof AuthenticatedCharactersCharacterIdEditRoute
 }
@@ -105,20 +124,24 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/explore'
     | '/rooms'
     | '/scenarios'
     | '/characters/$characterId'
     | '/characters/new'
+    | '/explorations/$explorationId'
     | '/projects/$projectId'
     | '/characters/$characterId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/explore'
     | '/rooms'
     | '/scenarios'
     | '/characters/$characterId'
     | '/characters/new'
+    | '/explorations/$explorationId'
     | '/projects/$projectId'
     | '/characters/$characterId/edit'
   id:
@@ -126,10 +149,12 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/explore'
     | '/_authenticated/rooms'
     | '/_authenticated/scenarios'
     | '/_authenticated/characters/$characterId'
     | '/_authenticated/characters/new'
+    | '/_authenticated/explorations/$explorationId'
     | '/_authenticated/projects/$projectId'
     | '/_authenticated/characters/$characterId_/edit'
   fileRoutesById: FileRoutesById
@@ -163,6 +188,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/explore': {
+      id: '/_authenticated/explore'
+      path: '/explore'
+      fullPath: '/explore'
+      preLoaderRoute: typeof AuthenticatedExploreRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/rooms': {
       id: '/_authenticated/rooms'
       path: '/rooms'
@@ -191,6 +223,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCharactersNewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/explorations/$explorationId': {
+      id: '/_authenticated/explorations/$explorationId'
+      path: '/explorations/$explorationId'
+      fullPath: '/explorations/$explorationId'
+      preLoaderRoute: typeof AuthenticatedExplorationsExplorationIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/projects/$projectId': {
       id: '/_authenticated/projects/$projectId'
       path: '/projects/$projectId'
@@ -209,20 +248,25 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedExploreRoute: typeof AuthenticatedExploreRoute
   AuthenticatedRoomsRoute: typeof AuthenticatedRoomsRoute
   AuthenticatedScenariosRoute: typeof AuthenticatedScenariosRoute
   AuthenticatedCharactersCharacterIdRoute: typeof AuthenticatedCharactersCharacterIdRoute
   AuthenticatedCharactersNewRoute: typeof AuthenticatedCharactersNewRoute
+  AuthenticatedExplorationsExplorationIdRoute: typeof AuthenticatedExplorationsExplorationIdRoute
   AuthenticatedProjectsProjectIdRoute: typeof AuthenticatedProjectsProjectIdRoute
   AuthenticatedCharactersCharacterIdEditRoute: typeof AuthenticatedCharactersCharacterIdEditRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedExploreRoute: AuthenticatedExploreRoute,
   AuthenticatedRoomsRoute: AuthenticatedRoomsRoute,
   AuthenticatedScenariosRoute: AuthenticatedScenariosRoute,
   AuthenticatedCharactersCharacterIdRoute:
     AuthenticatedCharactersCharacterIdRoute,
   AuthenticatedCharactersNewRoute: AuthenticatedCharactersNewRoute,
+  AuthenticatedExplorationsExplorationIdRoute:
+    AuthenticatedExplorationsExplorationIdRoute,
   AuthenticatedProjectsProjectIdRoute: AuthenticatedProjectsProjectIdRoute,
   AuthenticatedCharactersCharacterIdEditRoute:
     AuthenticatedCharactersCharacterIdEditRoute,
