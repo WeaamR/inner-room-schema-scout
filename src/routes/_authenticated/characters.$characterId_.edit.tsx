@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { CharacterForm } from "@/components/inner/CharacterForm";
 import { Empty, ErrorState, Loading } from "@/components/inner/States";
 import { errorMessage } from "@/lib/inner-room";
-import { characterQuery } from "./characters.$characterId";
+import { characterQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/characters/$characterId_/edit")({
   head: () => ({
