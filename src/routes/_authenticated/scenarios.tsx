@@ -8,7 +8,7 @@ import { selectClass } from "@/components/inner/ProjectDialog";
 import { scenariosQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/scenarios")({
-  validateSearch: (s: Record<string, unknown>): { characterId?: string; category?: string } => ({
+  validateSearch: (s: Record<string, unknown>): { characterId?: string | undefined; category?: string | undefined } => ({
     characterId: typeof s["characterId"] === "string" ? s["characterId"] : undefined,
     category: typeof s["category"] === "string" ? s["category"] : undefined,
   }),
