@@ -7,7 +7,7 @@ import { Empty } from "@/components/inner/States";
 import { errorMessage } from "@/lib/inner-room";
 
 export const Route = createFileRoute("/_authenticated/characters/new")({
-  validateSearch: (s: Record<string, unknown>) => ({ projectId: typeof s.projectId === "string" ? s.projectId : "" }),
+  validateSearch: (s: Record<string, unknown>): { projectId?: string } => ({ projectId: typeof s["projectId"] === "string" ? s["projectId"] : undefined }),
   head: () => ({
     meta: [
       { title: "شخصية جديدة — THE INNER ROOM" },

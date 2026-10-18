@@ -12,9 +12,9 @@ import { characterQuery, scenariosQuery } from "@/lib/queries";
 type ExplorationInsert = Database["public"]["Tables"]["character_explorations"]["Insert"];
 
 export const Route = createFileRoute("/_authenticated/explore")({
-  validateSearch: (s: Record<string, unknown>) => ({
-    characterId: typeof s.characterId === "string" ? s.characterId : "",
-    scenarioId: typeof s.scenarioId === "string" ? s.scenarioId : "",
+  validateSearch: (s: Record<string, unknown>): { characterId?: string; scenarioId?: string } => ({
+    characterId: typeof s["characterId"] === "string" ? s["characterId"] : undefined,
+    scenarioId: typeof s["scenarioId"] === "string" ? s["scenarioId"] : undefined,
   }),
   head: () => ({
     meta: [
@@ -32,7 +32,7 @@ function Explore() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const inFlight = useRef(false);
-  const ch = useQuery({ ...characterQuery(characterId), enabled: !!characterId });
+  const ch = useQuery({ enabled: !!characterId, queryKey: ["character", characterId ?? ""], queryFn: characterQuery(characterId ?? "").queryFn });
   const sc = useQuery(scenariosQuery);
 
   if (!characterId || !scenarioId) return <Empty title="اختر شخصية ومعضلة"><Link to="/scenarios" className="text-amber underline">افتح مكتبة المعضلات</Link></Empty>;

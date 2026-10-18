@@ -10,7 +10,7 @@ import { Empty, ErrorState, Loading } from "@/components/inner/States";
 import { PROJECT_STATUS_LABEL } from "@/lib/inner-room";
 
 export const Route = createFileRoute("/_authenticated/rooms")({
-  validateSearch: (s: Record<string, unknown>) => ({ new: s.new === true || s.new === "true" ? true : undefined }),
+  validateSearch: (s: Record<string, unknown>): { new?: boolean } => (s["new"] === true || s["new"] === "true" ? { new: true } : {}),
   head: () => ({
     meta: [
       { title: "غرف الكتابة — THE INNER ROOM" },

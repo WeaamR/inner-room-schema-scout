@@ -51,10 +51,10 @@ export function CharacterForm({
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (busy) return;
-    if (!v.name.trim()) return setError("اسم الشخصية مطلوب.");
+    if (!(v['name'] ?? '').trim()) return setError("اسم الشخصية مطلوب.");
     setBusy(true);
     setError(null);
-    const payload = { name: v.name.trim(), role: v.role } as CharacterValues;
+    const payload = { name: (v['name'] ?? '').trim(), role: v['role'] } as CharacterValues;
     FIELDS.forEach((f) => ((payload as Record<string, string | null>)[f.key] = clean(v[f.key])));
     const err = await onSubmit(payload);
     setBusy(false);
@@ -66,11 +66,11 @@ export function CharacterForm({
       <div className="grid gap-4 sm:grid-cols-[2fr_1fr]">
         <div className="space-y-2">
           <Label htmlFor="c-name">الاسم *</Label>
-          <Input id="c-name" value={v.name} onChange={(e) => setV({ ...v, name: e.target.value })} />
+          <Input id="c-name" value={(v['name'] ?? '')} onChange={(e) => setV({ ...v, name: e.target.value })} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="c-role">الدور</Label>
-          <select id="c-role" className={selectClass} value={v.role} onChange={(e) => setV({ ...v, role: e.target.value })}>
+          <select id="c-role" className={selectClass} value={v['role']} onChange={(e) => setV({ ...v, role: e.target.value })}>
             {CHARACTER_ROLES.map((r) => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}
           </select>
         </div>

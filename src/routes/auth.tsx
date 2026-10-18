@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (s: Record<string, unknown>) => ({ mode: s.mode === "signup" ? ("signup" as const) : ("signin" as const) }),
+  validateSearch: (s: Record<string, unknown>): { mode?: "signin" | "signup" } => ({ mode: s["mode"] === "signup" ? "signup" : "signin" }),
   head: () => ({
     meta: [
       { title: "الدخول — THE INNER ROOM" },
