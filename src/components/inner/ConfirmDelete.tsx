@@ -1,0 +1,54 @@
+import { useState, type ReactNode } from "react";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+
+export function ConfirmDelete({
+  trigger,
+  title,
+  description,
+  onConfirm,
+}: {
+  trigger: ReactNode;
+  title: string;
+  description: string;
+  onConfirm: () => Promise<boolean>;
+}) {
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  return (
+    <AlertDialog open={open} onOpenChange={(o) => !busy && setOpen(o)}>
+      <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
+      <AlertDialogContent dir="rtl" className="text-right">
+        <AlertDialogHeader className="text-right sm:text-right">
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="gap-2 sm:justify-start">
+          <Button
+            variant="destructive"
+            disabled={busy}
+            onClick={async () => {
+              setBusy(true);
+              const ok = await onConfirm();
+              setBusy(false);
+              if (ok) setOpen(false);
+            }}
+          >
+            {busy && <Loader2 className="h-4 w-4 animate-spin" />} حذف نهائي
+          </Button>
+          <AlertDialogCancel disabled={busy}>إلغاء</AlertDialogCancel>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
