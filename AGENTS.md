@@ -8,3 +8,7 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Architecture
+- Data access goes through the browser Supabase client under the `_authenticated` (ssr:false) layout; ownership is enforced only by existing RLS/triggers — why: the schema is user-managed and must not be changed from the app.
+- Never send `user_id` or scenario snapshot fields when inserting explorations — why: DB defaults and trigger own them.
