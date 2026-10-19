@@ -1,3 +1,5 @@
+import { localizedField, reportMissingTranslations } from "@/lib/translations";
+import { useLanguage } from "@/components/inner/Language";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowRight, DoorOpen, Pencil, Trash2 } from "lucide-react";
@@ -7,12 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ConfirmDelete } from "@/components/inner/ConfirmDelete";
 import { Empty, ErrorState, Loading } from "@/components/inner/States";
-import { EXPLORATION_STATUS_LABEL, ROLE_LABEL, errorMessage, formatDate } from "@/lib/inner-room";
+import { EXPLORATION_STATUS_LABEL, ROLE_LABEL, errorMessage } from "@/lib/inner-room";
 import { characterQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/characters/$characterId")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "الشخصية — THE INNER ROOM" },
       { name: "description", content: "ملف الشخصية ورحلة استكشافاتها." },
       { property: "og:title", content: "الشخصية — THE INNER ROOM" },
@@ -34,6 +38,7 @@ const PROFILE: [string, string][] = [
 ];
 
 function CharacterPage() {
+  const { t, language, date } = useLanguage();
   const { characterId } = Route.useParams();
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -43,10 +48,11 @@ function CharacterPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("character_explorations")
-        .select("id, scenario_title_snapshot, decision_text, motivation_text, status, created_at")
+        .select("id, scenario_title_snapshot, scenario_title_snapshot_ar, decision_text, motivation_text, status, created_at")
         .eq("character_id", characterId)
         .order("created_at", { ascending: false });
       if (error) throw error;
+      reportMissingTranslations(data, [["scenario_title_snapshot", "scenario_title_snapshot_ar"]]);
       return data;
     },
   });
@@ -54,19 +60,19 @@ function CharacterPage() {
   if (q.isPending) return <Loading />;
   if (q.isError) return <ErrorState error={q.error} onRetry={() => q.refetch()} />;
   if (!q.data)
-    return <Empty title="الشخصية غير متاحة">غير موجودة أو لا تخصّك. <Link to="/rooms" className="text-amber underline">العودة</Link></Empty>;
+    return <Empty title={t("الشخصية غير متاحة")}>{t("غير موجودة أو لا تخصّك.")} <Link to="/rooms" className="text-amber underline">{t("العودة")}</Link></Empty>;
   const c = q.data as typeof q.data & Record<string, string | null>;
   const project = c.writing_projects as unknown as { id: string; title: string } | null;
 
   async function remove() {
     const { error } = await supabase.from("characters").delete().eq("id", characterId);
     if (error) {
-      toast.error(errorMessage(error));
+      toast.error(t(errorMessage(error)));
       return false;
     }
     await qc.invalidateQueries({ queryKey: ["characters", c.project_id] });
     await qc.invalidateQueries({ queryKey: ["projects"] });
-    toast.success("تم حذف الشخصية");
+    toast.success(t("تم حذف الشخصية"));
     navigate({ to: "/projects/$projectId", params: { projectId: c.project_id } });
     return true;
   }
@@ -74,68 +80,67 @@ function CharacterPage() {
   return (
     <div>
       <Link to="/projects/$projectId" params={{ projectId: c.project_id }} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowRight className="h-4 w-4" /> {project?.title ?? "المشروع"}
+        <ArrowRight className="ltr:rotate-180 h-4 w-4" /> {project?.title ?? t("المشروع")}
       </Link>
       <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-sm text-amber">{ROLE_LABEL[c.role] ?? c.role}</p>
+          <p className="text-sm text-amber">{t(ROLE_LABEL[c.role] ?? c.role ?? "")}</p>
           <h1 className="text-5xl">{c.name}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button asChild variant="outline" size="sm"><Link to="/characters/$characterId/edit" params={{ characterId }}><Pencil className="h-4 w-4" /> تعديل</Link></Button>
+          <Button asChild variant="outline" size="sm"><Link to="/characters/$characterId/edit" params={{ characterId }}><Pencil className="h-4 w-4" /> {t("تعديل")}</Link></Button>
           <ConfirmDelete
-            title="حذف الشخصية؟"
-            description="ستُحذف الشخصية نهائياً. إذا كانت لها استكشافات قد يرفض النظام الحذف حتى تُحذف أولاً."
+            title={t("حذف الشخصية؟")}
+            description={t("ستُحذف الشخصية نهائياً. إذا كانت لها استكشافات قد يرفض النظام الحذف حتى تُحذف أولاً.")}
             onConfirm={remove}
-            trigger={<Button variant="ghost" size="sm" className="text-destructive"><Trash2 className="h-4 w-4" /> حذف</Button>}
+            trigger={<Button variant="ghost" size="sm" className="text-destructive"><Trash2 className="h-4 w-4" /> {t("حذف")}</Button>}
           />
         </div>
       </div>
 
       <div className="mt-8 rounded-2xl border border-primary/50 bg-primary/10 p-6 sm:flex sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-2xl">ادخل الغرفة الداخلية</h2>
-          <p className="mt-1 text-sm text-muted-foreground">اختر معضلة وضع {c.name} أمامها. أنت من يكتب ما تقرّره.</p>
+          <h2 className="text-2xl">{t("ادخل الغرفة الداخلية")}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{t("اختر معضلة وضع {name} أمامها. أنت من يكتب ما تقرّره.", { name: c.name })}</p>
         </div>
-        <Button asChild size="lg" className="mt-4 sm:mt-0"><Link to="/scenarios" search={{ characterId }}><DoorOpen className="h-5 w-5" /> اختر معضلة</Link></Button>
+        <Button asChild size="lg" className="mt-4 sm:mt-0"><Link to="/scenarios" search={{ characterId }}><DoorOpen className="h-5 w-5" /> {t("اختر معضلة")}</Link></Button>
       </div>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_1.2fr]">
         <section>
-          <h2 className="text-3xl">الملف</h2>
+          <h2 className="text-3xl">{t("الملف")}</h2>
           <dl className="mt-4 space-y-4">
             {PROFILE.map(([k, label]) => (
               <div key={k} className="border-b pb-3">
-                <dt className="text-xs text-amber">{label}</dt>
-                <dd className="mt-1 whitespace-pre-wrap text-sm">{c[k] || <span className="text-muted-foreground">لم يُكتشف بعد</span>}</dd>
+                <dt className="text-xs text-amber">{t(label)}</dt>
+                <dd className="mt-1 whitespace-pre-wrap text-sm">{c[k] || <span className="text-muted-foreground">{t("لم يُكتشف بعد")}</span>}</dd>
               </div>
             ))}
           </dl>
         </section>
         <section>
-          <h2 className="text-3xl">رحلة الشخصية</h2>
+          <h2 className="text-3xl">{t("رحلة الشخصية")}</h2>
           <div className="mt-4">
             {ex.isPending ? (
               <Loading />
             ) : ex.isError ? (
               <ErrorState error={ex.error} onRetry={() => ex.refetch()} />
             ) : ex.data.length === 0 ? (
-              <Empty title="لم تبدأ الرحلة بعد">
-                اضغط «اختر معضلة»، اختر موقفاً من المكتبة، ثم دوّن قرار {c.name} ودافعها وثمنه.
+              <Empty title={t("لم تبدأ الرحلة بعد")}>{t("اضغط «اختر معضلة»، اختر موقفاً من المكتبة، ثم دوّن قرار {name} ودافعها وثمنه.", { name: c.name })}
               </Empty>
             ) : (
-              <ol className="space-y-4 border-r pr-5">
+              <ol className="space-y-4 border-s ps-5">
                 {ex.data.map((e) => (
                   <li key={e.id} className="relative">
-                    <span className="absolute -right-[27px] top-2 h-3 w-3 rounded-full bg-primary" />
+                    <span className="absolute -start-[27px] top-2 h-3 w-3 rounded-full bg-primary" />
                     <Link to="/explorations/$explorationId" params={{ explorationId: e.id }} className="block rounded-xl border bg-card/60 p-4 hover:border-primary">
                       <div className="flex items-center justify-between gap-2">
-                        <h3 className="text-xl">{e.scenario_title_snapshot}</h3>
-                        <Badge variant={e.status === "completed" ? "default" : "outline"}>{EXPLORATION_STATUS_LABEL[e.status] ?? e.status}</Badge>
+                        <h3 className="text-xl">{localizedField(e, "scenario_title_snapshot", "scenario_title_snapshot_ar", language)}</h3>
+                        <Badge variant={e.status === "completed" ? "default" : "outline"}>{t(EXPLORATION_STATUS_LABEL[e.status] ?? e.status ?? "")}</Badge>
                       </div>
-                      <p className="mt-1 text-xs text-muted-foreground">{formatDate(e.created_at)}</p>
-                      {e.decision_text && <p className="mt-3 line-clamp-2 text-sm"><span className="text-amber">القرار: </span>{e.decision_text}</p>}
-                      {e.motivation_text && <p className="mt-1 line-clamp-2 text-sm text-muted-foreground"><span className="text-amber">الدافع: </span>{e.motivation_text}</p>}
+                      <p className="mt-1 text-xs text-muted-foreground">{date(e.created_at)}</p>
+                      {e.decision_text && <p className="mt-3 line-clamp-2 text-sm"><span className="text-amber">{t("القرار:")} </span>{e.decision_text}</p>}
+                      {e.motivation_text && <p className="mt-1 line-clamp-2 text-sm text-muted-foreground"><span className="text-amber">{t("الدافع:")} </span>{e.motivation_text}</p>}
                     </Link>
                   </li>
                 ))}

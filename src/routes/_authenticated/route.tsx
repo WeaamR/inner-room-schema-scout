@@ -1,3 +1,4 @@
+import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
 import { createFileRoute, Link, Outlet, redirect, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -17,6 +18,7 @@ export const Route = createFileRoute("/_authenticated")({
 });
 
 function AppShell() {
+  const { t } = useLanguage();
   const { email } = Route.useRouteContext();
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -32,10 +34,10 @@ function AppShell() {
   const links = (
     <>
       <Link to="/rooms" onClick={() => setOpen(false)} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground [&.active]:text-amber">
-        <BookOpen className="h-4 w-4" /> غرف الكتابة
+        <BookOpen className="h-4 w-4" />{t("غرف الكتابة")}
       </Link>
       <Link to="/rooms" search={{ new: true }} onClick={() => setOpen(false)} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-        <Plus className="h-4 w-4" /> مشروع جديد
+        <Plus className="h-4 w-4" />{t("مشروع جديد")}
       </Link>
     </>
   );
@@ -43,22 +45,23 @@ function AppShell() {
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-30 border-b bg-background/85 backdrop-blur">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4">
+        <div className="mx-auto flex min-h-14 flex-wrap py-2 max-w-6xl items-center justify-between gap-4 px-4">
           <Wordmark className="text-sm sm:text-base" />
-          <nav className="hidden items-center gap-6 md:flex">{links}</nav>
-          <div className="hidden items-center gap-3 md:flex">
+          <LanguageSwitcher />
+           <nav className="hidden items-center gap-6 lg:flex">{links}</nav>
+          <div className="hidden items-center gap-3 lg:flex">
             <span className="max-w-[180px] truncate text-xs text-muted-foreground" dir="ltr">{email}</span>
-            <Button variant="ghost" size="sm" onClick={signOut}><LogOut className="h-4 w-4" /> خروج</Button>
+            <Button variant="ghost" size="sm" onClick={signOut}><LogOut className="h-4 w-4" /> {t("خروج")}</Button>
           </div>
-          <Button variant="ghost" size="icon" className="md:hidden" aria-label="القائمة" onClick={() => setOpen(!open)}>
+          <Button variant="ghost" size="icon" className="lg:hidden" aria-label={t("القائمة")} onClick={() => setOpen(!open)}>
             {open ? <X /> : <Menu />}
           </Button>
         </div>
         {open && (
-          <div className="flex flex-col gap-4 border-t px-4 py-4 md:hidden">
+          <div className="flex flex-col gap-4 border-t px-4 py-4 lg:hidden">
             {links}
             <span className="truncate text-xs text-muted-foreground" dir="ltr">{email}</span>
-            <Button variant="outline" size="sm" onClick={signOut}><LogOut className="h-4 w-4" /> تسجيل الخروج</Button>
+            <Button variant="outline" size="sm" onClick={signOut}><LogOut className="h-4 w-4" /> {t("تسجيل الخروج")}</Button>
           </div>
         )}
       </header>

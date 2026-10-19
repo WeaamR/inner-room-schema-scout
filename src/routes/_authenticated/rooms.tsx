@@ -1,3 +1,4 @@
+import { useLanguage } from "@/components/inner/Language";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -13,6 +14,8 @@ export const Route = createFileRoute("/_authenticated/rooms")({
   validateSearch: (s: Record<string, unknown>): { new?: boolean } => (s["new"] === true || s["new"] === "true" ? { new: true } : {}),
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "غرف الكتابة — THE INNER ROOM" },
       { name: "description", content: "مشاريعك الكتابية وشخصياتها." },
       { property: "og:title", content: "غرف الكتابة — THE INNER ROOM" },
@@ -23,6 +26,7 @@ export const Route = createFileRoute("/_authenticated/rooms")({
 });
 
 function Rooms() {
+  const { t, number } = useLanguage();
   const search = Route.useSearch();
   const navigate = useNavigate();
   const [editOpen, setEditOpen] = useState(false);
@@ -47,10 +51,10 @@ function Rooms() {
     <div>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-4xl">غرف الكتابة</h1>
-          <p className="mt-1 text-muted-foreground">كل مشروع غرفة، وكل شخصية باب.</p>
+          <h1 className="text-4xl">{t("غرف الكتابة")}</h1>
+          <p className="mt-1 text-muted-foreground">{t("كل مشروع غرفة، وكل شخصية باب.")}</p>
         </div>
-        <Button onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> مشروع جديد</Button>
+        <Button onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> {t("مشروع جديد")}</Button>
       </div>
       <div className="mt-8">
         {q.isPending ? (
@@ -58,9 +62,9 @@ function Rooms() {
         ) : q.isError ? (
           <ErrorState error={q.error} onRetry={() => q.refetch()} />
         ) : q.data.length === 0 ? (
-          <Empty title="لا توجد غرف بعد">
-            أنشئ مشروعك الأول، ثم أضف إليه شخصياتك وابدأ استكشافها.
-            <div className="mt-4"><Button onClick={() => setCreateOpen(true)}>أنشئ مشروعاً</Button></div>
+          <Empty title={t("لا توجد غرف بعد")}>
+            {t("أنشئ مشروعك الأول، ثم أضف إليه شخصياتك وابدأ استكشافها.")}
+            <div className="mt-4"><Button onClick={() => setCreateOpen(true)}>{t("أنشئ مشروعاً")}</Button></div>
           </Empty>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -75,12 +79,12 @@ function Rooms() {
                 >
                   <div className="flex items-start justify-between gap-2">
                     <h2 className="text-2xl group-hover:text-amber">{p.title}</h2>
-                    <Badge variant="outline">{PROJECT_STATUS_LABEL[p.status] ?? p.status}</Badge>
+                    <Badge variant="outline">{t(PROJECT_STATUS_LABEL[p.status] ?? p.status ?? "")}</Badge>
                   </div>
                   {p.genre && <p className="mt-1 text-sm text-amber/80">{p.genre}</p>}
                   {p.synopsis && <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{p.synopsis}</p>}
                   <p className="mt-5 flex items-center gap-1 text-xs text-muted-foreground">
-                    <Users className="h-3.5 w-3.5" /> {count} {count === 1 ? "شخصية" : "شخصيات"}
+                    <Users className="h-3.5 w-3.5" /> {number(count)} {count === 1 ? t("شخصية") : t("شخصيات")}
                   </p>
                 </Link>
               );

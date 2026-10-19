@@ -1,3 +1,4 @@
+import { useLanguage, LanguageProvider } from "@/components/inner/Language";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -16,14 +17,15 @@ import { Toaster } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
+  const { t, language, direction, date, number } = useLanguage();
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-amber">٤٠٤</h1>
-        <h2 className="mt-4 text-xl font-semibold">هذه الغرفة غير موجودة</h2>
-        <p className="mt-2 text-sm text-muted-foreground">الصفحة التي تبحث عنها غير موجودة أو نُقلت.</p>
+        <h1 className="text-7xl font-bold text-amber">{t("٤٠٤")}</h1>
+        <h2 className="mt-4 text-xl font-semibold">{t("هذه الغرفة غير موجودة")}</h2>
+        <p className="mt-2 text-sm text-muted-foreground">{t("الصفحة التي تبحث عنها غير موجودة أو نُقلت.")}</p>
         <Link to="/" className="mt-6 inline-flex rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground">
-          العودة للرئيسية
+          {t("العودة للرئيسية")}
         </Link>
       </div>
     </div>
@@ -31,6 +33,7 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: ErrorComponentProps) {
+  const { t, language, direction, date, number } = useLanguage();
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -39,8 +42,8 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold">تعذّر تحميل الصفحة</h1>
-        <p className="mt-2 text-sm text-muted-foreground">حدث خطأ ما. حاول مجدداً أو عد إلى الرئيسية.</p>
+        <h1 className="text-xl font-semibold">{t("تعذّر تحميل الصفحة")}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{t("حدث خطأ ما. حاول مجدداً أو عد إلى الرئيسية.")}</p>
         <div className="mt-6 flex justify-center gap-2">
           <button
             onClick={() => {
@@ -49,9 +52,9 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
             }}
             className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground"
           >
-            حاول مجدداً
+            {t("حاول مجدداً")}
           </button>
-          <a href="/" className="rounded-md border px-4 py-2 text-sm">الرئيسية</a>
+          <a href="/" className="rounded-md border px-4 py-2 text-sm">{t("الرئيسية")}</a>
         </div>
       </div>
     </div>
@@ -75,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap",
       },
     ],
   }),
@@ -87,7 +90,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="ar" dir="rtl">
+    <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
@@ -100,6 +103,11 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
+  return <LanguageProvider><RootContent /></LanguageProvider>;
+}
+
+function RootContent() {
+  const { t, language, direction, date, number } = useLanguage();
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   useEffect(() => {
@@ -114,7 +122,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
-      <Toaster position="top-center" dir="rtl" />
+      <Toaster position="top-center" dir={direction} />
     </QueryClientProvider>
   );
 }

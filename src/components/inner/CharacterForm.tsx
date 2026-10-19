@@ -1,3 +1,4 @@
+import { useLanguage } from "@/components/inner/Language";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,7 @@ export function CharacterForm({
   onSubmit: (v: CharacterValues) => Promise<string | null>;
   onCancel: () => void;
 }) {
+  const { t } = useLanguage();
   const [v, setV] = useState<Record<string, string>>(() => {
     const o: Record<string, string> = { name: initial?.name ?? "", role: initial?.role ?? "other" };
     FIELDS.forEach((f) => (o[f.key] = (initial?.[f.key] as string) ?? ""));
@@ -65,29 +67,29 @@ export function CharacterForm({
     <form onSubmit={submit} className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-[2fr_1fr]">
         <div className="space-y-2">
-          <Label htmlFor="c-name">الاسم *</Label>
+          <Label htmlFor="c-name">{t("الاسم *")}</Label>
           <Input id="c-name" value={(v['name'] ?? '')} onChange={(e) => setV({ ...v, name: e.target.value })} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="c-role">الدور</Label>
+          <Label htmlFor="c-role">{t("الدور")}</Label>
           <select id="c-role" className={selectClass} value={v['role']} onChange={(e) => setV({ ...v, role: e.target.value })}>
-            {CHARACTER_ROLES.map((r) => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}
+            {CHARACTER_ROLES.map((r) => <option key={r} value={r}>{t(ROLE_LABEL[r] ?? "")}</option>)}
           </select>
         </div>
       </div>
-      <p className="text-xs text-muted-foreground">الاسم وحده يكفي للحفظ. أكمل الباقي متى اكتشفته.</p>
+      <p className="text-xs text-muted-foreground">{t("الاسم وحده يكفي للحفظ. أكمل الباقي متى اكتشفته.")}</p>
       <div className="grid gap-5 md:grid-cols-2">
         {FIELDS.map((f) => (
           <div key={f.key} className="space-y-2">
-            <Label htmlFor={`c-${f.key}`}>{f.label}</Label>
-            <Textarea id={`c-${f.key}`} rows={3} placeholder={f.hint} value={v[f.key]} onChange={(e) => setV({ ...v, [f.key]: e.target.value })} />
+            <Label htmlFor={`c-${f.key}`}>{t(f.label)}</Label>
+            <Textarea id={`c-${f.key}`} rows={3} placeholder={t(f.hint)} value={v[f.key]} onChange={(e) => setV({ ...v, [f.key]: e.target.value })} />
           </div>
         ))}
       </div>
-      {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
+      {error && <p role="alert" className="text-sm text-destructive">{t(error)}</p>}
       <div className="flex gap-2">
-        <Button type="submit" disabled={busy}>{busy && <Loader2 className="h-4 w-4 animate-spin" />} حفظ الشخصية</Button>
-        <Button type="button" variant="ghost" disabled={busy} onClick={onCancel}>إلغاء</Button>
+        <Button type="submit" disabled={busy}>{busy && <Loader2 className="h-4 w-4 animate-spin" />}{t("حفظ الشخصية")} </Button>
+        <Button type="button" variant="ghost" disabled={busy} onClick={onCancel}>{t("إلغاء")}</Button>
       </div>
     </form>
   );

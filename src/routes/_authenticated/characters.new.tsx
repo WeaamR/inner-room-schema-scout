@@ -1,3 +1,4 @@
+import { useLanguage } from "@/components/inner/Language";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -10,6 +11,8 @@ export const Route = createFileRoute("/_authenticated/characters/new")({
   validateSearch: (s: Record<string, unknown>): { projectId?: string | undefined } => ({ projectId: typeof s["projectId"] === "string" ? s["projectId"] : undefined }),
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "شخصية جديدة — THE INNER ROOM" },
       { name: "description", content: "استوديو الشخصيات: أضف شخصية جديدة." },
       { property: "og:title", content: "شخصية جديدة — THE INNER ROOM" },
@@ -20,14 +23,15 @@ export const Route = createFileRoute("/_authenticated/characters/new")({
 });
 
 function NewCharacter() {
+  const { t } = useLanguage();
   const { projectId } = Route.useSearch();
   const navigate = useNavigate();
   const qc = useQueryClient();
-  if (!projectId) return <Empty title="اختر مشروعاً أولاً">أنشئ الشخصية من صفحة المشروع.</Empty>;
+  if (!projectId) return <Empty title={t("اختر مشروعاً أولاً")}>{t("أنشئ الشخصية من صفحة المشروع.")}</Empty>;
   return (
     <div className="mx-auto max-w-4xl">
-      <h1 className="text-4xl">استوديو الشخصيات</h1>
-      <p className="mt-1 mb-8 text-muted-foreground">شخصية جديدة تنتظر أن تُكتشف.</p>
+      <h1 className="text-4xl">{t("استوديو الشخصيات")}</h1>
+      <p className="mt-1 mb-8 text-muted-foreground">{t("شخصية جديدة تنتظر أن تُكتشف.")}</p>
       <CharacterForm
         onCancel={() => navigate({ to: "/projects/$projectId", params: { projectId } })}
         onSubmit={async (v) => {
@@ -35,7 +39,7 @@ function NewCharacter() {
           if (error) return errorMessage(error);
           await qc.invalidateQueries({ queryKey: ["characters", projectId] });
           await qc.invalidateQueries({ queryKey: ["projects"] });
-          toast.success("تم حفظ الشخصية");
+          toast.success(t("تم حفظ الشخصية"));
           navigate({ to: "/characters/$characterId", params: { characterId: data.id } });
           return null;
         }}
