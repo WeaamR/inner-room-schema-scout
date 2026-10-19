@@ -29,7 +29,7 @@ function translate(msg: string) {
   if (/already registered/i.test(msg)) return "هذا البريد مسجّل مسبقاً. جرّب تسجيل الدخول.";
   if (/password/i.test(msg)) return "كلمة المرور ضعيفة: استخدم ٦ أحرف على الأقل.";
   if (/fetch|network/i.test(msg)) return "تعذّر الاتصال بالخادم.";
-  return msg;
+  return "حدث خطأ غير متوقع. حاول مجدداً.";
 }
 
 function AuthPage() {
@@ -49,7 +49,6 @@ function AuthPage() {
   }, [navigate]);
 
   async function submit(e: React.FormEvent) {
-  const { t, language, direction, date, number } = useLanguage();
     e.preventDefault();
     if (busy) return;
     setBusy(true);
@@ -83,10 +82,10 @@ function AuthPage() {
         {confirmSent ? (
           <div className="text-center">
             <h1 className="text-3xl text-amber">{t("تحقّق من بريدك")}</h1>
-            <p className="mt-4 text-sm text-muted-foreground">{t("أرسلنا رابط تأكيد إلى")} <span dir="ltr">{email}</span>. افتحه لتفعيل حسابك ثم سجّل الدخول.
+            <p className="mt-4 text-sm text-muted-foreground">{t("أرسلنا رابط تأكيد إلى {email}. افتحه لتفعيل حسابك ثم سجّل الدخول.", { email })}
             </p>
             <Button variant="outline" className="mt-6" onClick={() => { setConfirmSent(false); navigate({ search: { mode: "signin" } }); }}>
-              العودة لتسجيل الدخول
+              {t("العودة لتسجيل الدخول")}
             </Button>
           </div>
         ) : (

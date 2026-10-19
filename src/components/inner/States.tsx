@@ -20,7 +20,7 @@ export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () =>
       <p className="text-sm">{t(errorMessage(error))}</p>
       {onRetry && (
         <Button variant="outline" size="sm" className="mt-4" onClick={onRetry}>
-          حاول مجدداً
+          {t("حاول مجدداً")}
         </Button>
       )}
     </div>

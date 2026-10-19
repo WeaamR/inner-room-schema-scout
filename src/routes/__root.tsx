@@ -1,4 +1,4 @@
-import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
+import { useLanguage, LanguageProvider } from "@/components/inner/Language";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -25,7 +25,7 @@ function NotFoundComponent() {
         <h2 className="mt-4 text-xl font-semibold">{t("هذه الغرفة غير موجودة")}</h2>
         <p className="mt-2 text-sm text-muted-foreground">{t("الصفحة التي تبحث عنها غير موجودة أو نُقلت.")}</p>
         <Link to="/" className="mt-6 inline-flex rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground">
-          العودة للرئيسية
+          {t("العودة للرئيسية")}
         </Link>
       </div>
     </div>
@@ -52,7 +52,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
             }}
             className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground"
           >
-            حاول مجدداً
+            {t("حاول مجدداً")}
           </button>
           <a href="/" className="rounded-md border px-4 py-2 text-sm">{t("الرئيسية")}</a>
         </div>
@@ -78,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap",
       },
     ],
   }),
@@ -95,7 +95,7 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        {children}
+        <LanguageProvider>{children}</LanguageProvider>
         <Scripts />
       </body>
     </html>

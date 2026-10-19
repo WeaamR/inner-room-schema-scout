@@ -47,7 +47,6 @@ export function ProjectDialog({
   }, [open, project]);
 
   async function save(e: React.FormEvent) {
-  const { t, language, direction, date, number } = useLanguage();
     e.preventDefault();
     if (busy) return;
     if (!title.trim()) return setError("عنوان المشروع مطلوب.");

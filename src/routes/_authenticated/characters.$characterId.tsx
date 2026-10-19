@@ -1,3 +1,4 @@
+import { localizedField, reportMissingTranslations, categoryLabels, tensionLabels } from "@/lib/translations";
 import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -47,10 +48,11 @@ function CharacterPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("character_explorations")
-        .select("id, scenario_title_snapshot, decision_text, motivation_text, status, created_at")
+        .select("id, scenario_title_snapshot, scenario_title_snapshot_ar, decision_text, motivation_text, status, created_at")
         .eq("character_id", characterId)
         .order("created_at", { ascending: false });
       if (error) throw error;
+      reportMissingTranslations(data, [["scenario_title_snapshot", "scenario_title_snapshot_ar"]]);
       return data;
     },
   });
@@ -63,7 +65,6 @@ function CharacterPage() {
   const project = c.writing_projects as unknown as { id: string; title: string } | null;
 
   async function remove() {
-  const { t, language, direction, date, number } = useLanguage();
     const { error } = await supabase.from("characters").delete().eq("id", characterId);
     if (error) {
       toast.error(t(errorMessage(error)));
@@ -100,7 +101,7 @@ function CharacterPage() {
       <div className="mt-8 rounded-2xl border border-primary/50 bg-primary/10 p-6 sm:flex sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl">{t("ادخل الغرفة الداخلية")}</h2>
-          <p className="mt-1 text-sm text-muted-foreground">{t("اختر معضلة وضع")} {c.name}{t("أمامها. أنت من يكتب ما تقرّره.")} </p>
+          <p className="mt-1 text-sm text-muted-foreground">{t("اختر معضلة وضع {name} أمامها. أنت من يكتب ما تقرّره.", { name: c.name })}</p>
         </div>
         <Button asChild size="lg" className="mt-4 sm:mt-0"><Link to="/scenarios" search={{ characterId }}><DoorOpen className="h-5 w-5" /> {t("اختر معضلة")}</Link></Button>
       </div>
@@ -125,7 +126,7 @@ function CharacterPage() {
             ) : ex.isError ? (
               <ErrorState error={ex.error} onRetry={() => ex.refetch()} />
             ) : ex.data.length === 0 ? (
-              <Empty title={t("لم تبدأ الرحلة بعد")}>{t("اضغط «اختر معضلة»، اختر موقفاً من المكتبة، ثم دوّن قرار")} {c.name} ودافعها وثمنه.
+              <Empty title={t("لم تبدأ الرحلة بعد")}>{t("اضغط «اختر معضلة»، اختر موقفاً من المكتبة، ثم دوّن قرار {name} ودافعها وثمنه.", { name: c.name })}
               </Empty>
             ) : (
               <ol className="space-y-4 border-s ps-5">
@@ -134,7 +135,7 @@ function CharacterPage() {
                     <span className="absolute -start-[27px] top-2 h-3 w-3 rounded-full bg-primary" />
                     <Link to="/explorations/$explorationId" params={{ explorationId: e.id }} className="block rounded-xl border bg-card/60 p-4 hover:border-primary">
                       <div className="flex items-center justify-between gap-2">
-                        <h3 className="text-xl">{e.scenario_title_snapshot}</h3>
+                        <h3 className="text-xl">{localizedField(e, "scenario_title_snapshot", "scenario_title_snapshot_ar", language)}</h3>
                         <Badge variant={e.status === "completed" ? "default" : "outline"}>{t(EXPLORATION_STATUS_LABEL[e.status] ?? e.status ?? "")}</Badge>
                       </div>
                       <p className="mt-1 text-xs text-muted-foreground">{date(e.created_at)}</p>

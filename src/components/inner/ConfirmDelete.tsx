@@ -46,7 +46,7 @@ export function ConfirmDelete({
               if (ok) setOpen(false);
             }}
           >
-            {busy && <Loader2 className="h-4 w-4 animate-spin" />} حذف نهائي
+            {busy && <Loader2 className="h-4 w-4 animate-spin" />}{t("حذف نهائي")}
           </Button>
           <AlertDialogCancel disabled={busy}>{t("إلغاء")}</AlertDialogCancel>
         </AlertDialogFooter>

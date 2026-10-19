@@ -1,3 +1,4 @@
+import { localizedField, reportMissingTranslations, categoryLabels, tensionLabels } from "@/lib/translations";
 import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -50,9 +51,9 @@ function Explore() {
   return (
     <div className="mx-auto max-w-3xl">
       <p className="text-sm text-muted-foreground">
-        <span className="text-amber">{character.name}</span> تدخل الغرفة
+        {t("{name} تدخل الغرفة", { name: character.name })}
       </p>
-      <div className="mt-4"><ScenarioCard title={scenario.title} premise={scenario.premise} question={scenario.dilemma_question} /></div>
+      <div className="mt-4"><ScenarioCard title={localizedField(scenario, "title", "title_ar", language)} premise={localizedField(scenario, "premise", "premise_ar", language)} question={localizedField(scenario, "dilemma_question", "dilemma_question_ar", language)} /></div>
       <div className="mt-8">
         <ExplorationForm
           onCancel={() => navigate({ to: "/characters/$characterId", params: { characterId } })}

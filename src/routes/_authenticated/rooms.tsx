@@ -63,7 +63,7 @@ function Rooms() {
           <ErrorState error={q.error} onRetry={() => q.refetch()} />
         ) : q.data.length === 0 ? (
           <Empty title={t("لا توجد غرف بعد")}>
-            أنشئ مشروعك الأول، ثم أضف إليه شخصياتك وابدأ استكشافها.
+            {t("أنشئ مشروعك الأول، ثم أضف إليه شخصياتك وابدأ استكشافها.")}
             <div className="mt-4"><Button onClick={() => setCreateOpen(true)}>{t("أنشئ مشروعاً")}</Button></div>
           </Empty>
         ) : (
@@ -84,7 +84,7 @@ function Rooms() {
                   {p.genre && <p className="mt-1 text-sm text-amber/80">{p.genre}</p>}
                   {p.synopsis && <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{p.synopsis}</p>}
                   <p className="mt-5 flex items-center gap-1 text-xs text-muted-foreground">
-                    <Users className="h-3.5 w-3.5" /> {count} {count === 1 ? t("شخصية") : t("شخصيات")}
+                    <Users className="h-3.5 w-3.5" /> {number(count)} {count === 1 ? t("شخصية") : t("شخصيات")}
                   </p>
                 </Link>
               );

@@ -98,3 +98,10 @@
     white-space: pre-wrap;
   }
 }
+
+html[lang="en"] { --font-display: "Cormorant Garamond", serif; --font-sans: "IBM Plex Sans", system-ui, sans-serif; }
+@layer base {
+  h1, h2, h3, p, dd, dt { overflow-wrap: anywhere; }
+  input, textarea { text-align: start; }
+  button { white-space: normal; }
+}

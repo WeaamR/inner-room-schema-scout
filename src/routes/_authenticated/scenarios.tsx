@@ -1,3 +1,4 @@
+import { localizedField, reportMissingTranslations, categoryLabels, tensionLabels } from "@/lib/translations";
 import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -68,7 +69,7 @@ function Scenarios() {
         <div className="mt-6 flex flex-wrap gap-2">
           <Button size="sm" variant={!category ? "default" : "outline"} onClick={() => navigate({ search: (p) => ({ ...p, category: undefined }) })}>{t("الكل")}</Button>
           {categories.map((c) => (
-            <Button key={c} size="sm" variant={category === c ? "default" : "outline"} onClick={() => navigate({ search: (p) => ({ ...p, category: c }) })}>{c}</Button>
+            <Button key={c} size="sm" variant={category === c ? "default" : "outline"} onClick={() => navigate({ search: (p) => ({ ...p, category: c }) })}>{t(categoryLabels[c] ?? c)}</Button>
           ))}
         </div>
       )}
@@ -85,14 +86,14 @@ function Scenarios() {
             {list.map((s) => (
               <article key={s.id} className="flex flex-col rounded-xl border bg-card/60 p-6">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-amber">{s.category}</span>
-                  <span className="flex items-center gap-0.5" aria-label={`مستوى التوتر ${s.tension_level}`}>
+                  <span className="text-amber">{t(categoryLabels[s.category] ?? s.category)}</span>
+                  <span className="flex items-center gap-0.5" aria-label={`${t("مستوى التوتر")}: ${t(tensionLabels[s.tension_level] ?? "")}`} title={`${t("مستوى التوتر")}: ${t(tensionLabels[s.tension_level] ?? "")}`}>
                     {Array.from({ length: Math.max(1, s.tension_level) }).map((_, i) => <Flame key={i} className="h-3.5 w-3.5 text-primary" />)}
-                  </span>
+                  <span className="ms-1">{t(tensionLabels[s.tension_level] ?? "")}</span></span>
                 </div>
-                <h2 className="mt-2 text-2xl">{s.title}</h2>
-                <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{s.premise}</p>
-                <p className="mt-4 border-s-2 border-amber ps-3 text-sm">{s.dilemma_question}</p>
+                <h2 className="mt-2 text-2xl">{localizedField(s, "title", "title_ar", language)}</h2>
+                <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{localizedField(s, "premise", "premise_ar", language)}</p>
+                <p className="mt-4 border-s-2 border-amber ps-3 text-sm">{localizedField(s, "dilemma_question", "dilemma_question_ar", language)}</p>
                 <div className="mt-auto pt-5">
                   {characterId ? (
                     <Button asChild size="sm"><Link to="/explore" search={{ characterId, scenarioId: s.id }}>{t("ابدأ الاستكشاف")}</Link></Button>

@@ -64,7 +64,6 @@ function ProjectPage() {
   const p = project.data;
 
   async function remove() {
-  const { t, language, direction, date, number } = useLanguage();
     const { error } = await supabase.from("writing_projects").delete().eq("id", projectId);
     if (error) {
       toast.error(t(errorMessage(error)));
@@ -79,7 +78,7 @@ function ProjectPage() {
   return (
     <div>
       <Link to="/rooms" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowRight className="ltr:rotate-180 h-4 w-4" /> غرف الكتابة
+        <ArrowRight className="ltr:rotate-180 h-4 w-4" />{t("غرف الكتابة")}
       </Link>
       <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
         <div>

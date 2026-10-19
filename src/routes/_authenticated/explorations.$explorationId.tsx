@@ -1,3 +1,4 @@
+import { localizedField, reportMissingTranslations, categoryLabels, tensionLabels } from "@/lib/translations";
 import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -48,6 +49,7 @@ function ExplorationPage() {
         .eq("id", explorationId)
         .maybeSingle();
       if (error) throw error;
+      if (data) reportMissingTranslations([data], [["scenario_title_snapshot", "scenario_title_snapshot_ar"], ["scenario_premise_snapshot", "scenario_premise_snapshot_ar"], ["dilemma_question_snapshot", "dilemma_question_snapshot_ar"]]);
       return data;
     },
   });
@@ -59,7 +61,6 @@ function ExplorationPage() {
   const charName = (e.characters as unknown as { name: string } | null)?.name ?? t("الشخصية");
 
   async function remove() {
-  const { t, language, direction, date, number } = useLanguage();
     const { error } = await supabase.from("character_explorations").delete().eq("id", explorationId);
     if (error) {
       toast.error(t(errorMessage(error)));
@@ -95,7 +96,7 @@ function ExplorationPage() {
         )}
       </div>
       <div className="mt-6">
-        <ScenarioCard title={e.scenario_title_snapshot} premise={e.scenario_premise_snapshot} question={e.dilemma_question_snapshot} />
+        <ScenarioCard title={localizedField(e, "scenario_title_snapshot", "scenario_title_snapshot_ar", language)} premise={localizedField(e, "scenario_premise_snapshot", "scenario_premise_snapshot_ar", language)} question={localizedField(e, "dilemma_question_snapshot", "dilemma_question_snapshot_ar", language)} />
       </div>
       <div className="mt-8">
         {editing ? (

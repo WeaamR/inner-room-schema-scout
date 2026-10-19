@@ -25,7 +25,6 @@ function AppShell() {
   const [open, setOpen] = useState(false);
 
   async function signOut() {
-  const { t, language, direction, date, number } = useLanguage();
     await qc.cancelQueries();
     qc.clear();
     await supabase.auth.signOut();
@@ -35,10 +34,10 @@ function AppShell() {
   const links = (
     <>
       <Link to="/rooms" onClick={() => setOpen(false)} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground [&.active]:text-amber">
-        <BookOpen className="h-4 w-4" /> غرف الكتابة
+        <BookOpen className="h-4 w-4" />{t("غرف الكتابة")}
       </Link>
       <Link to="/rooms" search={{ new: true }} onClick={() => setOpen(false)} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-        <Plus className="h-4 w-4" /> مشروع جديد
+        <Plus className="h-4 w-4" />{t("مشروع جديد")}
       </Link>
     </>
   );

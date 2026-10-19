@@ -43,10 +43,10 @@ function Landing() {
           <img src={hero} alt={t("غرفة كاتب خافتة الإضاءة ليلاً")} width={1600} height={1008} className="h-[520px] w-full object-cover opacity-70" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 p-6 sm:p-12">
-            <p dir="ltr" className="font-brand text-sm tracking-[0.3em] text-amber">ENTER THE MIND. DISCOVER THE CHARACTER.</p>
+            <p dir={direction} className="font-brand text-sm tracking-[0.3em] text-amber">{t("ادخل العقل. اكتشف الشخصية.")}</p>
             <h1 className="mt-4 max-w-2xl text-4xl leading-tight sm:text-6xl">{t("ادخل عقل شخصيتك، واكتشفها من خلال قراراتها.")}</h1>
             <p className="mt-4 max-w-xl text-muted-foreground">
-              ضع شخصياتك أمام معضلات صعبة، ودوّن ما تختاره ولماذا وما ستخسره. أنت من يقرّر — والغرفة تحفظ كل رحلة لتعود إليها.
+              {t("ضع شخصياتك أمام معضلات صعبة، ودوّن ما تختاره ولماذا وما ستخسره. أنت من يقرّر — والغرفة تحفظ كل رحلة لتعود إليها.")}
             </p>
             <Button asChild size="lg" className="mt-8"><Link to="/auth" search={{ mode: "signup" }}>{t("ادخل الغرفة الأولى")}</Link></Button>
           </div>
@@ -72,7 +72,7 @@ function Landing() {
       </section>
 
       <footer className="border-t py-8 text-center text-xs text-muted-foreground">
-        <span dir="ltr" className="font-brand tracking-widest">THE INNER ROOM</span> — مساحة للكاتب، لا تشخّص ولا تحلّل نيابةً عنك.
+        <span dir="ltr" className="font-brand tracking-widest">THE INNER ROOM</span> — {t("مساحة للكاتب، لا تشخّص ولا تحلّل نيابةً عنك.")}
       </footer>
     </div>
   );

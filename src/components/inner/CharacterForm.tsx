@@ -51,7 +51,6 @@ export function CharacterForm({
   const [error, setError] = useState<string | null>(null);
 
   async function submit(e: React.FormEvent) {
-  const { t, language, direction, date, number } = useLanguage();
     e.preventDefault();
     if (busy) return;
     if (!(v['name'] ?? '').trim()) return setError("اسم الشخصية مطلوب.");

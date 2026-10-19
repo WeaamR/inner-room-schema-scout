@@ -42,7 +42,6 @@ export function ExplorationForm({
   const [error, setError] = useState<string | null>(null);
 
   async function save(status: "draft" | "completed") {
-  const { t, language, direction, date, number } = useLanguage();
     if (busy) return;
     if (status === "completed" && !canCompleteExploration(v.decision_text, v.motivation_text)) {
       setError("لإكمال الاستكشاف، اكتب القرار والدافع على الأقل. يمكنك حفظه كمسودة الآن.");
@@ -86,10 +85,10 @@ export function ExplorationForm({
       {error && <p role="alert" className="rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm">{t(error)}</p>}
       <div className="flex flex-wrap gap-2">
         <Button onClick={() => save("completed")} disabled={!!busy}>
-          {busy === "completed" && <Loader2 className="h-4 w-4 animate-spin" />} إكمال الاستكشاف
+          {busy === "completed" && <Loader2 className="h-4 w-4 animate-spin" />}{t("إكمال الاستكشاف")}
         </Button>
         <Button variant="outline" onClick={() => save("draft")} disabled={!!busy}>
-          {busy === "draft" && <Loader2 className="h-4 w-4 animate-spin" />} حفظ كمسودة
+          {busy === "draft" && <Loader2 className="h-4 w-4 animate-spin" />}{t("حفظ كمسودة")}
         </Button>
         <Button variant="ghost" onClick={onCancel} disabled={!!busy}>{t(cancelLabel)}</Button>
       </div>
