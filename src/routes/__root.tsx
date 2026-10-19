@@ -95,7 +95,7 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <LanguageProvider>{children}</LanguageProvider>
+        {children}
         <Scripts />
       </body>
     </html>
@@ -103,6 +103,10 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
+  return <LanguageProvider><RootContent /></LanguageProvider>;
+}
+
+function RootContent() {
   const { t, language, direction, date, number } = useLanguage();
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();

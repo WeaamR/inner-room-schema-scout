@@ -61,7 +61,7 @@ function Scenarios() {
           {chars.data?.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
         {chars.data && chars.data.length === 0 && (
-          <p className="text-xs text-muted-foregroundt(">{t("لا توجد شخصيات بعد.")} <Link to=")/rooms" className="text-amber underline">{t("أنشئ واحدة")}</Link>.</p>
+          <p className="text-xs text-muted-foreground">{t("لا توجد شخصيات بعد.")} <Link to="/rooms" className="text-amber underline">{t("أنشئ واحدة")}</Link>.</p>
         )}
       </div>
 
