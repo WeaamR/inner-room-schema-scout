@@ -33,7 +33,7 @@ function translate(msg: string) {
 }
 
 function AuthPage() {
-  const { t, language, direction, date, number } = useLanguage();
+  const { t } = useLanguage();
   const { mode } = Route.useSearch();
   const navigate = useNavigate({ from: "/auth" });
   const [email, setEmail] = useState("");

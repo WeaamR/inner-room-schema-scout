@@ -24,13 +24,14 @@ export function ConfirmDelete({
   description: string;
   onConfirm: () => Promise<boolean>;
 }) {
-  const { t, language, direction, date, number } = useLanguage();
+  const { t, direction } = useLanguage();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   return (
     <AlertDialog open={open} onOpenChange={(o) => !busy && setOpen(o)}>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
       <AlertDialogContent dir={direction} className="text-start">
+        <LanguageSwitcher />
         <AlertDialogHeader className="text-start sm:text-start">
           <AlertDialogTitle>{t(title)}</AlertDialogTitle>
           <AlertDialogDescription>{t(description)}</AlertDialogDescription>

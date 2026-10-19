@@ -1,4 +1,4 @@
-import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
+import { useLanguage } from "@/components/inner/Language";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/_authenticated/projects/$projectId")({
 });
 
 function ProjectPage() {
-  const { t, language, direction, date, number } = useLanguage();
+  const { t } = useLanguage();
   const { projectId } = Route.useParams();
   const navigate = useNavigate();
   const qc = useQueryClient();

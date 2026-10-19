@@ -1,5 +1,5 @@
-import { localizedField, reportMissingTranslations, categoryLabels, tensionLabels } from "@/lib/translations";
-import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
+import { localizedField, reportMissingTranslations } from "@/lib/translations";
+import { useLanguage } from "@/components/inner/Language";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { ConfirmDelete } from "@/components/inner/ConfirmDelete";
 import { ExplorationForm, ScenarioCard } from "@/components/inner/ExplorationForm";
 import { Empty, ErrorState, Loading } from "@/components/inner/States";
-import { EXPLORATION_STATUS_LABEL, errorMessage, formatDate } from "@/lib/inner-room";
+import { EXPLORATION_STATUS_LABEL, errorMessage } from "@/lib/inner-room";
 
 export const Route = createFileRoute("/_authenticated/explorations/$explorationId")({
   head: () => ({
@@ -35,7 +35,7 @@ const ANSWERS: [string, string][] = [
 ];
 
 function ExplorationPage() {
-  const { t, language, direction, date, number } = useLanguage();
+  const { t, language, date } = useLanguage();
   const { explorationId } = Route.useParams();
   const navigate = useNavigate();
   const qc = useQueryClient();

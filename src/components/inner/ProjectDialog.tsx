@@ -27,7 +27,7 @@ export function ProjectDialog({
   project?: ProjectRow;
   onSaved?: (id: string) => void;
 }) {
-  const { t, language, direction, date, number } = useLanguage();
+  const { t, direction } = useLanguage();
   const qc = useQueryClient();
   const [title, setTitle] = useState("");
   const [genre, setGenre] = useState("");
@@ -68,6 +68,7 @@ export function ProjectDialog({
   return (
     <Dialog open={open} onOpenChange={(o) => !busy && onOpenChange(o)}>
       <DialogContent dir={direction} className="text-start">
+        <LanguageSwitcher />
         <DialogHeader className="text-start sm:text-start">
           <DialogTitle className="font-display text-2xl">{project ? t("تعديل المشروع") : t("مشروع كتابة جديد")}</DialogTitle>
         </DialogHeader>

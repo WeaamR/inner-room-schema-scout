@@ -1,5 +1,5 @@
-import { localizedField, reportMissingTranslations, categoryLabels, tensionLabels } from "@/lib/translations";
-import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
+import { localizedField, categoryLabels, tensionLabels } from "@/lib/translations";
+import { useLanguage } from "@/components/inner/Language";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Flame } from "lucide-react";
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/_authenticated/scenarios")({
 });
 
 function Scenarios() {
-  const { t, language, direction, date, number } = useLanguage();
+  const { t, language } = useLanguage();
   const { characterId, category } = Route.useSearch();
   const navigate = useNavigate({ from: "/scenarios" });
   const q = useQuery(scenariosQuery);

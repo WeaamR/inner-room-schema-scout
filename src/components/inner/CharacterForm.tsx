@@ -1,4 +1,4 @@
-import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
+import { useLanguage } from "@/components/inner/Language";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -41,7 +41,7 @@ export function CharacterForm({
   onSubmit: (v: CharacterValues) => Promise<string | null>;
   onCancel: () => void;
 }) {
-  const { t, language, direction, date, number } = useLanguage();
+  const { t } = useLanguage();
   const [v, setV] = useState<Record<string, string>>(() => {
     const o: Record<string, string> = { name: initial?.name ?? "", role: initial?.role ?? "other" };
     FIELDS.forEach((f) => (o[f.key] = (initial?.[f.key] as string) ?? ""));

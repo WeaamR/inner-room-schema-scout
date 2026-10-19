@@ -1,5 +1,5 @@
-import { localizedField, reportMissingTranslations, categoryLabels, tensionLabels } from "@/lib/translations";
-import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
+import { localizedField, reportMissingTranslations } from "@/lib/translations";
+import { useLanguage } from "@/components/inner/Language";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowRight, DoorOpen, Pencil, Trash2 } from "lucide-react";
@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ConfirmDelete } from "@/components/inner/ConfirmDelete";
 import { Empty, ErrorState, Loading } from "@/components/inner/States";
-import { EXPLORATION_STATUS_LABEL, ROLE_LABEL, errorMessage, formatDate } from "@/lib/inner-room";
+import { EXPLORATION_STATUS_LABEL, ROLE_LABEL, errorMessage } from "@/lib/inner-room";
 import { characterQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/characters/$characterId")({
@@ -38,7 +38,7 @@ const PROFILE: [string, string][] = [
 ];
 
 function CharacterPage() {
-  const { t, language, direction, date, number } = useLanguage();
+  const { t, language, date } = useLanguage();
   const { characterId } = Route.useParams();
   const navigate = useNavigate();
   const qc = useQueryClient();

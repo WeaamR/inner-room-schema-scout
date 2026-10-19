@@ -1,5 +1,5 @@
-import { localizedField, reportMissingTranslations, categoryLabels, tensionLabels } from "@/lib/translations";
-import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
+import { localizedField } from "@/lib/translations";
+import { useLanguage } from "@/components/inner/Language";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
@@ -32,7 +32,7 @@ export const Route = createFileRoute("/_authenticated/explore")({
 });
 
 function Explore() {
-  const { t, language, direction, date, number } = useLanguage();
+  const { t, language } = useLanguage();
   const { characterId, scenarioId } = Route.useSearch();
   const navigate = useNavigate();
   const qc = useQueryClient();

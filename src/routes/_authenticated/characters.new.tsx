@@ -1,4 +1,4 @@
-import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
+import { useLanguage } from "@/components/inner/Language";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -23,7 +23,7 @@ export const Route = createFileRoute("/_authenticated/characters/new")({
 });
 
 function NewCharacter() {
-  const { t, language, direction, date, number } = useLanguage();
+  const { t } = useLanguage();
   const { projectId } = Route.useSearch();
   const navigate = useNavigate();
   const qc = useQueryClient();

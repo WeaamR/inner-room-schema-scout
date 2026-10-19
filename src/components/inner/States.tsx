@@ -1,4 +1,4 @@
-import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
+import { useLanguage } from "@/components/inner/Language";
 import { Loader2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";

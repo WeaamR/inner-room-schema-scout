@@ -1,4 +1,4 @@
-import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
+import { useLanguage } from "@/components/inner/Language";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/_authenticated/rooms")({
 });
 
 function Rooms() {
-  const { t, language, direction, date, number } = useLanguage();
+  const { t, number } = useLanguage();
   const search = Route.useSearch();
   const navigate = useNavigate();
   const [editOpen, setEditOpen] = useState(false);
