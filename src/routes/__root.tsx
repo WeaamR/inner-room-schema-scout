@@ -1,3 +1,4 @@
+import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -16,12 +17,13 @@ import { Toaster } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
+  const { t, language, direction, date, number } = useLanguage();
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-amber">٤٠٤</h1>
-        <h2 className="mt-4 text-xl font-semibold">هذه الغرفة غير موجودة</h2>
-        <p className="mt-2 text-sm text-muted-foreground">الصفحة التي تبحث عنها غير موجودة أو نُقلت.</p>
+        <h1 className="text-7xl font-bold text-amber">{t("٤٠٤")}</h1>
+        <h2 className="mt-4 text-xl font-semibold">{t("هذه الغرفة غير موجودة")}</h2>
+        <p className="mt-2 text-sm text-muted-foreground">{t("الصفحة التي تبحث عنها غير موجودة أو نُقلت.")}</p>
         <Link to="/" className="mt-6 inline-flex rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground">
           العودة للرئيسية
         </Link>
@@ -31,6 +33,7 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: ErrorComponentProps) {
+  const { t, language, direction, date, number } = useLanguage();
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -39,8 +42,8 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold">تعذّر تحميل الصفحة</h1>
-        <p className="mt-2 text-sm text-muted-foreground">حدث خطأ ما. حاول مجدداً أو عد إلى الرئيسية.</p>
+        <h1 className="text-xl font-semibold">{t("تعذّر تحميل الصفحة")}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{t("حدث خطأ ما. حاول مجدداً أو عد إلى الرئيسية.")}</p>
         <div className="mt-6 flex justify-center gap-2">
           <button
             onClick={() => {
@@ -51,7 +54,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
           >
             حاول مجدداً
           </button>
-          <a href="/" className="rounded-md border px-4 py-2 text-sm">الرئيسية</a>
+          <a href="/" className="rounded-md border px-4 py-2 text-sm">{t("الرئيسية")}</a>
         </div>
       </div>
     </div>
@@ -100,6 +103,7 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
+  const { t, language, direction, date, number } = useLanguage();
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   useEffect(() => {
@@ -114,7 +118,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
-      <Toaster position="top-center" dir="rtl" />
+      <Toaster position="top-center" dir={direction} />
     </QueryClientProvider>
   );
 }

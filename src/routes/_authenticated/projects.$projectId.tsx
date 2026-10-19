@@ -1,3 +1,4 @@
+import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -14,6 +15,8 @@ import { PROJECT_STATUS_LABEL, ROLE_LABEL, errorMessage } from "@/lib/inner-room
 export const Route = createFileRoute("/_authenticated/projects/$projectId")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "المشروع — THE INNER ROOM" },
       { name: "description", content: "تفاصيل المشروع وشخصياته." },
       { property: "og:title", content: "المشروع — THE INNER ROOM" },
@@ -24,6 +27,7 @@ export const Route = createFileRoute("/_authenticated/projects/$projectId")({
 });
 
 function ProjectPage() {
+  const { t, language, direction, date, number } = useLanguage();
   const { projectId } = Route.useParams();
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -54,20 +58,20 @@ function ProjectPage() {
   if (project.isError) return <ErrorState error={project.error} onRetry={() => project.refetch()} />;
   if (!project.data)
     return (
-      <Empty title="المشروع غير متاح">
-        هذا المشروع غير موجود أو لا يخصّك. <Link to="/rooms" className="text-amber underline">العودة إلى الغرف</Link>
+      <Empty title={t("المشروع غير متاح")}>{t("هذا المشروع غير موجود أو لا يخصّك.")} <Link to="/rooms" className="text-amber underline">{t("العودة إلى الغرف")}</Link>
       </Empty>
     );
   const p = project.data;
 
   async function remove() {
+  const { t, language, direction, date, number } = useLanguage();
     const { error } = await supabase.from("writing_projects").delete().eq("id", projectId);
     if (error) {
-      toast.error(errorMessage(error));
+      toast.error(t(errorMessage(error)));
       return false;
     }
     await qc.invalidateQueries({ queryKey: ["projects"] });
-    toast.success("تم حذف المشروع");
+    toast.success(t("تم حذف المشروع"));
     navigate({ to: "/rooms" });
     return true;
   }
@@ -75,31 +79,31 @@ function ProjectPage() {
   return (
     <div>
       <Link to="/rooms" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowRight className="h-4 w-4" /> غرف الكتابة
+        <ArrowRight className="ltr:rotate-180 h-4 w-4" /> غرف الكتابة
       </Link>
       <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-4xl">{p.title}</h1>
-            <Badge variant="outline">{PROJECT_STATUS_LABEL[p.status] ?? p.status}</Badge>
+            <Badge variant="outline">{t(PROJECT_STATUS_LABEL[p.status] ?? p.status ?? "")}</Badge>
           </div>
           {p.genre && <p className="mt-1 text-amber">{p.genre}</p>}
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => setEdit(true)}><Pencil className="h-4 w-4" /> تعديل</Button>
+          <Button variant="outline" size="sm" onClick={() => setEdit(true)}><Pencil className="h-4 w-4" /> {t("تعديل")}</Button>
           <ConfirmDelete
-            title="حذف المشروع؟"
-            description="سيُحذف المشروع نهائياً. إذا كانت له شخصيات قد يرفض النظام الحذف حتى تُحذف أولاً."
+            title={t("حذف المشروع؟")}
+            description={t("سيُحذف المشروع نهائياً. إذا كانت له شخصيات قد يرفض النظام الحذف حتى تُحذف أولاً.")}
             onConfirm={remove}
-            trigger={<Button variant="ghost" size="sm" className="text-destructive"><Trash2 className="h-4 w-4" /> حذف</Button>}
+            trigger={<Button variant="ghost" size="sm" className="text-destructive"><Trash2 className="h-4 w-4" /> {t("حذف")}</Button>}
           />
         </div>
       </div>
       {p.synopsis && <p className="mt-4 max-w-3xl whitespace-pre-wrap text-muted-foreground">{p.synopsis}</p>}
 
       <div className="mt-12 flex items-center justify-between">
-        <h2 className="text-3xl">الشخصيات</h2>
-        <Button asChild size="sm"><Link to="/characters/new" search={{ projectId }}><Plus className="h-4 w-4" /> شخصية جديدة</Link></Button>
+        <h2 className="text-3xl">{t("الشخصيات")}</h2>
+        <Button asChild size="sm"><Link to="/characters/new" search={{ projectId }}><Plus className="h-4 w-4" /> {t("شخصية جديدة")}</Link></Button>
       </div>
       <div className="mt-6">
         {chars.isPending ? (
@@ -107,17 +111,17 @@ function ProjectPage() {
         ) : chars.isError ? (
           <ErrorState error={chars.error} onRetry={() => chars.refetch()} />
         ) : chars.data.length === 0 ? (
-          <Empty title="لا شخصيات بعد">يكفي اسم لتبدأ. ستكتشف الباقي داخل الغرفة.</Empty>
+          <Empty title={t("لا شخصيات بعد")}>{t("يكفي اسم لتبدأ. ستكتشف الباقي داخل الغرفة.")}</Empty>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {chars.data.map((c) => (
               <Link key={c.id} to="/characters/$characterId" params={{ characterId: c.id }} className="rounded-xl border bg-card/60 p-5 transition hover:border-primary">
                 <div className="flex items-center justify-between">
                   <h3 className="text-2xl">{c.name}</h3>
-                  <span className="text-xs text-amber">{ROLE_LABEL[c.role] ?? c.role}</span>
+                  <span className="text-xs text-amber">{t(ROLE_LABEL[c.role] ?? c.role ?? "")}</span>
                 </div>
-                {c.desire && <p className="mt-3 line-clamp-2 text-sm text-muted-foreground"><span className="text-foreground">تريد: </span>{c.desire}</p>}
-                {c.fear && <p className="mt-1 line-clamp-2 text-sm text-muted-foreground"><span className="text-foreground">تخاف: </span>{c.fear}</p>}
+                {c.desire && <p className="mt-3 line-clamp-2 text-sm text-muted-foreground"><span className="text-foreground">{t("تريد:")} </span>{c.desire}</p>}
+                {c.fear && <p className="mt-1 line-clamp-2 text-sm text-muted-foreground"><span className="text-foreground">{t("تخاف:")} </span>{c.fear}</p>}
               </Link>
             ))}
           </div>

@@ -1,3 +1,4 @@
+import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -10,6 +11,8 @@ import { characterQuery } from "@/lib/queries";
 export const Route = createFileRoute("/_authenticated/characters/$characterId_/edit")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "تعديل الشخصية — THE INNER ROOM" },
       { name: "description", content: "عدّل ملف شخصيتك." },
       { property: "og:title", content: "تعديل الشخصية — THE INNER ROOM" },
@@ -20,17 +23,18 @@ export const Route = createFileRoute("/_authenticated/characters/$characterId_/e
 });
 
 function EditCharacter() {
+  const { t, language, direction, date, number } = useLanguage();
   const { characterId } = Route.useParams();
   const navigate = useNavigate();
   const qc = useQueryClient();
   const q = useQuery(characterQuery(characterId));
   if (q.isPending) return <Loading />;
   if (q.isError) return <ErrorState error={q.error} onRetry={() => q.refetch()} />;
-  if (!q.data) return <Empty title="الشخصية غير متاحة">غير موجودة أو لا تخصّك.</Empty>;
+  if (!q.data) return <Empty title={t("الشخصية غير متاحة")}>{t("غير موجودة أو لا تخصّك.")}</Empty>;
   const c = q.data;
   return (
     <div className="mx-auto max-w-4xl">
-      <h1 className="mb-8 text-4xl">تعديل: {c.name}</h1>
+      <h1 className="mb-8 text-4xl">{t("تعديل:")} {c.name}</h1>
       <CharacterForm
         initial={c}
         onCancel={() => navigate({ to: "/characters/$characterId", params: { characterId } })}
@@ -39,7 +43,7 @@ function EditCharacter() {
           if (error) return errorMessage(error);
           await qc.invalidateQueries({ queryKey: ["character", characterId] });
           await qc.invalidateQueries({ queryKey: ["characters", c.project_id] });
-          toast.success("تم حفظ التعديلات");
+          toast.success(t("تم حفظ التعديلات"));
           navigate({ to: "/characters/$characterId", params: { characterId } });
           return null;
         }}

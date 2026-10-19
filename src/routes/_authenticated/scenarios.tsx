@@ -1,3 +1,4 @@
+import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Flame } from "lucide-react";
@@ -14,6 +15,8 @@ export const Route = createFileRoute("/_authenticated/scenarios")({
   }),
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "مكتبة المعضلات — THE INNER ROOM" },
       { name: "description", content: "اختر معضلة لتضع شخصيتك أمامها." },
       { property: "og:title", content: "مكتبة المعضلات — THE INNER ROOM" },
@@ -24,6 +27,7 @@ export const Route = createFileRoute("/_authenticated/scenarios")({
 });
 
 function Scenarios() {
+  const { t, language, direction, date, number } = useLanguage();
   const { characterId, category } = Route.useSearch();
   const navigate = useNavigate({ from: "/scenarios" });
   const q = useQuery(scenariosQuery);
@@ -41,28 +45,28 @@ function Scenarios() {
 
   return (
     <div>
-      <h1 className="text-4xl">مكتبة المعضلات</h1>
-      <p className="mt-1 text-muted-foreground">مواقف صعبة تنتظر قرار شخصيتك.</p>
+      <h1 className="text-4xl">{t("مكتبة المعضلات")}</h1>
+      <p className="mt-1 text-muted-foreground">{t("مواقف صعبة تنتظر قرار شخصيتك.")}</p>
 
       <div className="mt-6 max-w-sm space-y-2">
-        <label htmlFor="sc-char" className="text-sm">الشخصية التي ستدخل الغرفة</label>
+        <label htmlFor="sc-char" className="text-sm">{t("الشخصية التي ستدخل الغرفة")}</label>
         <select
           id="sc-char"
           className={selectClass}
           value={characterId ?? ""}
           onChange={(e) => navigate({ search: (p) => ({ ...p, characterId: e.target.value || undefined }), replace: true })}
         >
-          <option value="">— اختر شخصية —</option>
+          <option value="">{t("— اختر شخصية —")}</option>
           {chars.data?.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
         {chars.data && chars.data.length === 0 && (
-          <p className="text-xs text-muted-foreground">لا توجد شخصيات بعد. <Link to="/rooms" className="text-amber underline">أنشئ واحدة</Link>.</p>
+          <p className="text-xs text-muted-foregroundt(">{t("لا توجد شخصيات بعد.")} <Link to=")/rooms" className="text-amber underline">{t("أنشئ واحدة")}</Link>.</p>
         )}
       </div>
 
       {categories.length > 0 && (
         <div className="mt-6 flex flex-wrap gap-2">
-          <Button size="sm" variant={!category ? "default" : "outline"} onClick={() => navigate({ search: (p) => ({ ...p, category: undefined }) })}>الكل</Button>
+          <Button size="sm" variant={!category ? "default" : "outline"} onClick={() => navigate({ search: (p) => ({ ...p, category: undefined }) })}>{t("الكل")}</Button>
           {categories.map((c) => (
             <Button key={c} size="sm" variant={category === c ? "default" : "outline"} onClick={() => navigate({ search: (p) => ({ ...p, category: c }) })}>{c}</Button>
           ))}
@@ -75,7 +79,7 @@ function Scenarios() {
         ) : q.isError ? (
           <ErrorState error={q.error} onRetry={() => q.refetch()} />
         ) : list.length === 0 ? (
-          <Empty title="لا توجد معضلات منشورة">لم تُنشر أي معضلة في هذا التصنيف بعد.</Empty>
+          <Empty title={t("لا توجد معضلات منشورة")}>{t("لم تُنشر أي معضلة في هذا التصنيف بعد.")}</Empty>
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
             {list.map((s) => (
@@ -88,12 +92,12 @@ function Scenarios() {
                 </div>
                 <h2 className="mt-2 text-2xl">{s.title}</h2>
                 <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{s.premise}</p>
-                <p className="mt-4 border-r-2 border-amber pr-3 text-sm">{s.dilemma_question}</p>
+                <p className="mt-4 border-s-2 border-amber ps-3 text-sm">{s.dilemma_question}</p>
                 <div className="mt-auto pt-5">
                   {characterId ? (
-                    <Button asChild size="sm"><Link to="/explore" search={{ characterId, scenarioId: s.id }}>ابدأ الاستكشاف</Link></Button>
+                    <Button asChild size="sm"><Link to="/explore" search={{ characterId, scenarioId: s.id }}>{t("ابدأ الاستكشاف")}</Link></Button>
                   ) : (
-                    <Button size="sm" disabled>اختر شخصية أولاً</Button>
+                    <Button size="sm" disabled>{t("اختر شخصية أولاً")}</Button>
                   )}
                 </div>
               </article>

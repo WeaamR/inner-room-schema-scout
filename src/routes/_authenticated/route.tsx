@@ -1,3 +1,4 @@
+import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
 import { createFileRoute, Link, Outlet, redirect, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -17,12 +18,14 @@ export const Route = createFileRoute("/_authenticated")({
 });
 
 function AppShell() {
+  const { t, language, direction, date, number } = useLanguage();
   const { email } = Route.useRouteContext();
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
 
   async function signOut() {
+  const { t, language, direction, date, number } = useLanguage();
     await qc.cancelQueries();
     qc.clear();
     await supabase.auth.signOut();
@@ -45,12 +48,13 @@ function AppShell() {
       <header className="sticky top-0 z-30 border-b bg-background/85 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4">
           <Wordmark className="text-sm sm:text-base" />
-          <nav className="hidden items-center gap-6 md:flex">{links}</nav>
+          <LanguageSwitcher />
+           <nav className="hidden items-center gap-6 md:flex">{links}</nav>
           <div className="hidden items-center gap-3 md:flex">
             <span className="max-w-[180px] truncate text-xs text-muted-foreground" dir="ltr">{email}</span>
-            <Button variant="ghost" size="sm" onClick={signOut}><LogOut className="h-4 w-4" /> خروج</Button>
+            <Button variant="ghost" size="sm" onClick={signOut}><LogOut className="h-4 w-4" /> {t("خروج")}</Button>
           </div>
-          <Button variant="ghost" size="icon" className="md:hidden" aria-label="القائمة" onClick={() => setOpen(!open)}>
+          <Button variant="ghost" size="icon" className="md:hidden" aria-label={t("القائمة")} onClick={() => setOpen(!open)}>
             {open ? <X /> : <Menu />}
           </Button>
         </div>
@@ -58,7 +62,7 @@ function AppShell() {
           <div className="flex flex-col gap-4 border-t px-4 py-4 md:hidden">
             {links}
             <span className="truncate text-xs text-muted-foreground" dir="ltr">{email}</span>
-            <Button variant="outline" size="sm" onClick={signOut}><LogOut className="h-4 w-4" /> تسجيل الخروج</Button>
+            <Button variant="outline" size="sm" onClick={signOut}><LogOut className="h-4 w-4" /> {t("تسجيل الخروج")}</Button>
           </div>
         )}
       </header>

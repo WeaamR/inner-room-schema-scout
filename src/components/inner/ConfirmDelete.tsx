@@ -1,3 +1,4 @@
+import { useLanguage, LanguageSwitcher } from "@/components/inner/Language";
 import { useState, type ReactNode } from "react";
 import {
   AlertDialog,
@@ -23,15 +24,16 @@ export function ConfirmDelete({
   description: string;
   onConfirm: () => Promise<boolean>;
 }) {
+  const { t, language, direction, date, number } = useLanguage();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   return (
     <AlertDialog open={open} onOpenChange={(o) => !busy && setOpen(o)}>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
-      <AlertDialogContent dir="rtl" className="text-right">
-        <AlertDialogHeader className="text-right sm:text-right">
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
+      <AlertDialogContent dir={direction} className="text-start">
+        <AlertDialogHeader className="text-start sm:text-start">
+          <AlertDialogTitle>{t(title)}</AlertDialogTitle>
+          <AlertDialogDescription>{t(description)}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="gap-2 sm:justify-start">
           <Button
@@ -46,7 +48,7 @@ export function ConfirmDelete({
           >
             {busy && <Loader2 className="h-4 w-4 animate-spin" />} حذف نهائي
           </Button>
-          <AlertDialogCancel disabled={busy}>إلغاء</AlertDialogCancel>
+          <AlertDialogCancel disabled={busy}>{t("إلغاء")}</AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
